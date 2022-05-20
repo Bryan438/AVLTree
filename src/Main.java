@@ -25,24 +25,20 @@ public class Main {
             {
                 System.out.println("Delete tree, -1 to quit");
                 int dValue = myObj.nextInt();
-                Node n = new Node(val);
-                tree.dNode(dValue, tree.curNode, tree);
+                tree.deleteNode(dValue);
             }
             else {
                 Node n = new Node(val);
                 if(tree.getNode() == null)
                 {
-                    tree.curNode = n;
+                    tree.setNode(n);
                 }
                 else {
-                    tree.placeNode(n);
+                    tree.insertNode(n);
                 }
             }
-            tree.resetHei();
-            tree.resetBal();
-            Node n = new Node(val);
-            tree.checkBalance(tree.curNode);
-            printTree(tree.getNode());
+
+            tree.printTree(tree.getNode());
         }
 
         /*while (true){
@@ -100,71 +96,14 @@ public class Main {
 
     }
 
-    public static void printTree(Node n)
-    {
 
-        /*if (n != null) {
-            System.out.print(n.getVal() + " ");
-            printTree(n.getLeftNode());
-            printTree(n.getRightNode());
-        }*/
-        Stage first = new Stage(n);
-        Stack<Stage> stk = new Stack<Stage>();
-        stk.push(first);
-        while(stk.empty() == false)
-        {
-            Stage scene = stk.peek();
-            Node node = scene.getNode();
-            while(node.getLeftNode() != null && scene.getLeftChecked() == false) {
-                Stage s = new Stage (node.getLeftNode());
-                stk.push(s);
-                scene = stk.peek();
-                node = scene.getNode();
-            }
-            stk.peek().setLeftChecked();
-            if(stk.peek().getRightChecked() == false)
-            {
-                if(stk.peek().getNode().getRightNode() == null)
-                {
-                    stk.peek().setrightChecked();
-                }
-                else {
-                    Stage s = new Stage(stk.peek().getNode().getRightNode());
-                    stk.push(s);
-                    scene = stk.peek();
-                    node = scene.getNode();
-                }
-            }
-            while(stk.peek().getLeftChecked() == true && stk.peek().getRightChecked() == true)
-            {
-                System.out.print(node.getVal() + " ");
-
-                stk.pop();
-                if(stk.empty() == true)
-                {
-                    break;
-                }
-                scene = stk.peek();
-                node = scene.getNode();
-
-                if(stk.peek().getLeftChecked() == false)
-                {
-                    stk.peek().setLeftChecked();
-                }
-                else if(stk.peek().getRightChecked() == false)
-                {
-                    stk.peek().setrightChecked();
-                }
-
-            }
-        }
-    }
 
 
 }
 class Tree
 {
-    Node curNode;
+    private Node curNode;
+
     public void setNode(Node n) {
         curNode = n;
     }
@@ -172,15 +111,16 @@ class Tree
     {
         return curNode;
     }
-    public void placeNode(Node n){
+
+    public void insertNode(Node n){
         boolean check = false;
         Node no = curNode;
-        while(check != true) {
+        while(true) {
             if (n.getVal() <= no.getVal()) {
                 if (no.getLeftNode() == null) {
                     no.setLeftNode(n);
                     n.setParent(no);
-                    check = true;
+                    break;
                 } else {
                     no = no.getLeftNode();
                 }
@@ -188,17 +128,20 @@ class Tree
                 if (no.getRightNode() == null) {
                     no.setRightNode(n);
                     n.setParent(no);
-                    check = true;
+                    break;
                 } else {
                     no = no.getRightNode();
                 }
             } else {
                 curNode = n;
-                check = true;
+                break;
             }
         }
+
+        reBalance();
     }
-    public void deleteNode(Node n) {
+
+    protected void remove(Node n) {
 
         if(n.getLeftNode() == null && n.getRightNode() == null)
         {
@@ -312,7 +255,7 @@ class Tree
         }*/
     }
 
-    public void dNode(int val, Node n, Tree t) {
+    public void deleteNode(int val) {
         /*if(n == null)
         {
             return null;
@@ -327,39 +270,45 @@ class Tree
             n.checkBalance(t.curNode, t);
         }
         return null;*/
-        Stage first = new Stage(n);
+        Stage first = new Stage(curNode);
         Stack<Stage> stk = new Stack<Stage>();
         stk.push(first);
+
         while(stk.empty() == false)
         {
-            while(stk.peek().getNode().getLeftNode() != null && stk.peek().getLeftChecked() == false) {
+            Stage scene = stk.peek();
+            Node node = scene.getNode();
+
+            if(node.getLeftNode() != null && scene.getLeftChecked() == false) {
                 Stage s = new Stage (stk.peek().getNode().getLeftNode());
                 stk.push(s);
+                continue;
             }
             stk.peek().setLeftChecked();
-            if(stk.peek().getRightChecked() == false)
+            if(scene.getRightChecked() == false)
             {
                 if(stk.peek().getNode().getRightNode() == null)
                 {
                     stk.peek().setrightChecked();
                 }
                 else {
-                    Stage s = new Stage(stk.peek().getNode().getRightNode());
+                    Stage s = new Stage(node.getRightNode());
                     stk.push(s);
+                    continue;
                 }
             }
             while(stk.peek().getLeftChecked() == true && stk.peek().getRightChecked() == true)
             {
                 if(stk.peek().getNode().getVal() == val) {
-                    t.deleteNode(stk.peek().getNode());
-                    if (t.curNode == null)
+                    remove(stk.peek().getNode());
+                    if (curNode == null)
                     {
                         stk.pop();
                         break;
                     }
-                    t.resetHei();
-                    t.resetBal();
-                    t.checkBalance(t.curNode);
+                    resetHei();
+                    resetBal();
+                    checkBalance();
                 }
                 stk.pop();
                 if(stk.empty() == true)
@@ -378,6 +327,14 @@ class Tree
             }
         }
 
+        reBalance();
+    }
+
+    void reBalance()
+    {
+        resetHei();
+        resetBal();
+        checkBalance();
     }
 
     public Node findMin(Node n)
@@ -390,13 +347,13 @@ class Tree
     }
     public void resetHei()
     {
-        setHeight(curNode);
+        setHeight();
     }
     public void resetBal() {
-        getBalance(curNode);
+        getBalance();
     }
 
-    public int setHeight(Node n)
+    public int setHeight()
     {
         /*if(n == null)
         {
@@ -406,7 +363,7 @@ class Tree
         n.rightHeight = setHeight(n.getRightNode());
         n.height =  Math.max(n.leftHeight, n.rightHeight) + 1;
         return n.height;*/
-        Stage first = new Stage(n);
+        Stage first = new Stage(curNode);
         Stack<Stage> stk = new Stack<Stage>();
         stk.push(first);
         while(stk.empty() == false)
@@ -414,11 +371,10 @@ class Tree
             Stage scene = stk.peek();
             Node node = scene.getNode();
 
-            while(node.getLeftNode() != null && scene.getLeftChecked() == false) {
+            if(node.getLeftNode() != null && scene.getLeftChecked() == false) {
                 Stage s = new Stage (stk.peek().getNode().getLeftNode());
                 stk.push(s);
-                scene = stk.peek();
-                node = scene.getNode();
+                continue;
             }
             if(stk.peek().getNode().getLeftNode() == null)
             {
@@ -436,8 +392,7 @@ class Tree
                 else {
                     Stage s = new Stage(node.getRightNode());
                     stk.push(s);
-                    scene = stk.peek();
-                    node = scene.getNode();
+                    continue;
                 }
             }
             while(scene.getLeftChecked() == true && scene.getRightChecked() == true) {
@@ -475,25 +430,24 @@ class Tree
         return 0;
     }
 
-    public void getBalance(Node n)
+    public void getBalance()
     {
         /*if (n != null) {
             n.balance = n.leftHeight - n.rightHeight;
             getBalance(n.getLeftNode());
             getBalance(n.getRightNode());
         }*/
-        Stage first = new Stage(n);
+        Stage first = new Stage(curNode);
         Stack<Stage> stk = new Stack<Stage>();
         stk.push(first);
         while(stk.empty() == false)
         {
             Stage scene = stk.peek();
             Node node = scene.getNode();
-            while(node.getLeftNode() != null && scene.getLeftChecked() == false) {
+            if(node.getLeftNode() != null && scene.getLeftChecked() == false) {
                 Stage s = new Stage (node.getLeftNode());
                 stk.push(s);
-                scene = stk.peek();
-                node = scene.getNode();
+                continue;
             }
             stk.peek().setLeftChecked();
             if(stk.peek().getRightChecked() == false)
@@ -505,8 +459,7 @@ class Tree
                 else {
                     Stage s = new Stage(stk.peek().getNode().getRightNode());
                     stk.push(s);
-                    scene = stk.peek();
-                    node = scene.getNode();
+                    continue;
                 }
             }
             while(stk.peek().getLeftChecked() == true && stk.peek().getRightChecked() == true)
@@ -631,7 +584,7 @@ class Tree
         leftRotation(n);
     }
 
-    public Node checkBalance(Node n)
+    public Node checkBalance()
     {
         /*if(n == null)
         {
@@ -654,7 +607,8 @@ class Tree
             }
         }
         return null;*/
-        Stage first = new Stage(n);
+
+        Stage first = new Stage(curNode);
         Stack<Stage> stk = new Stack<Stage>();
         stk.push(first);
         while(stk.empty() == false)
@@ -662,11 +616,10 @@ class Tree
             Stage scene = stk.peek();
             Node node = scene.getNode();
 
-            while(node.getLeftNode() != null && scene.getLeftChecked() == false) {
+            if(node.getLeftNode() != null && scene.getLeftChecked() == false) {
                 Stage s = new Stage (node.getLeftNode());
                 stk.push(s);
-                scene = stk.peek();
-                node = scene.getNode();
+                continue;
 
             }
             scene.setLeftChecked();
@@ -679,8 +632,7 @@ class Tree
                 else {
                     Stage s = new Stage(node.getRightNode());
                     stk.push(s);
-                    scene = stk.peek();
-                    node = scene.getNode();
+                    continue;
                 }
             }
             while(scene.getLeftChecked() == true && scene.getRightChecked() == true)
@@ -721,6 +673,66 @@ class Tree
             }
         }
         return null;
+    }
+
+    public static void printTree(Node n)
+    {
+
+        /*if (n != null) {
+            System.out.print(n.getVal() + " ");
+            printTree(n.getLeftNode());
+            printTree(n.getRightNode());
+        }*/
+        Stage first = new Stage(n);
+        Stack<Stage> stk = new Stack<Stage>();
+        stk.push(first);
+        while(stk.empty() == false)
+        {
+            Stage scene = stk.peek();
+            Node node = scene.getNode();
+            if(node.getLeftNode() != null && scene.getLeftChecked() == false) {
+                Stage s = new Stage (node.getLeftNode());
+                stk.push(s);
+                continue;
+                /*scene = stk.peek();
+                node = scene.getNode();*/
+            }
+            stk.peek().setLeftChecked();
+            if(stk.peek().getRightChecked() == false)
+            {
+                if(stk.peek().getNode().getRightNode() == null)
+                {
+                    stk.peek().setrightChecked();
+                }
+                else {
+                    Stage s = new Stage(stk.peek().getNode().getRightNode());
+                    stk.push(s);
+                    continue;
+                }
+            }
+            while(stk.peek().getLeftChecked() == true && stk.peek().getRightChecked() == true)
+            {
+                System.out.print(node.getVal() + " ");
+
+                stk.pop();
+                if(stk.empty() == true)
+                {
+                    break;
+                }
+                scene = stk.peek();
+                node = scene.getNode();
+
+                if(stk.peek().getLeftChecked() == false)
+                {
+                    stk.peek().setLeftChecked();
+                }
+                else if(stk.peek().getRightChecked() == false)
+                {
+                    stk.peek().setrightChecked();
+                }
+
+            }
+        }
     }
 
 }
