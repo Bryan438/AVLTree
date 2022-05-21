@@ -38,7 +38,7 @@ public class Main {
                 }
             }
 
-            tree.printTree(tree.getNode());
+            tree.printTree();
         }
 
         /*while (true){
@@ -113,24 +113,23 @@ class Tree
     }
 
     public void insertNode(Node n){
-        boolean check = false;
         Node no = curNode;
         while(true) {
             if (n.getVal() <= no.getVal()) {
-                if (no.getLeftNode() == null) {
-                    no.setLeftNode(n);
+                if (no.getLeftChild() == null) {
+                    no.setLeftChild(n);
                     n.setParent(no);
                     break;
                 } else {
-                    no = no.getLeftNode();
+                    no = no.getLeftChild();
                 }
             } else if (n.getVal() > no.getVal()) {
-                if (no.getRightNode() == null) {
-                    no.setRightNode(n);
+                if (no.getRightChild() == null) {
+                    no.setRightChild(n);
                     n.setParent(no);
                     break;
                 } else {
-                    no = no.getRightNode();
+                    no = no.getRightChild();
                 }
             } else {
                 curNode = n;
@@ -143,114 +142,114 @@ class Tree
 
     protected void remove(Node n) {
 
-        if(n.getLeftNode() == null && n.getRightNode() == null)
+        if(n.getLeftChild() == null && n.getRightChild() == null)
         {
             if(n.getParent() == null)
             {
                 curNode = null;
             }
-            else if(n.getParent().getLeftNode() == n)
+            else if(n.getParent().getLeftChild() == n)
             {
-                n.getParent().setLeftNode(null);
+                n.getParent().setLeftChild(null);
             }
             else{
-                n.getParent().setRightNode(null);
+                n.getParent().setRightChild(null);
             }
         }
-        else if(((n.getLeftNode() != null || n.getRightNode() != null) == true) && (n.getRightNode() != null && n.getLeftNode() != null) == false)
+        else if(((n.getLeftChild() != null || n.getRightChild() != null) == true) && (n.getRightChild() != null && n.getLeftChild() != null) == false)
         {
             Node x = n.getParent();
             if(n == curNode) {
-                if(n.getLeftNode() != null) {
-                    curNode = n.getLeftNode();
+                if(n.getLeftChild() != null) {
+                    curNode = n.getLeftChild();
                 }
                 else{
-                    curNode = n.getRightNode();
+                    curNode = n.getRightChild();
                 }
             }
             else {
-                if (n.getParent().getLeftNode() == n) {
-                    if (n.getLeftNode() != null) {
-                        x.setLeftNode(n.getLeftNode());
-                        n.getLeftNode().setParent(n.getParent());
+                if (n.getParent().getLeftChild() == n) {
+                    if (n.getLeftChild() != null) {
+                        x.setLeftChild(n.getLeftChild());
+                        n.getLeftChild().setParent(n.getParent());
                     } else {
-                        x.setLeftNode(n.getRightNode());
-                        n.getRightNode().setParent(n.getParent());
+                        x.setLeftChild(n.getRightChild());
+                        n.getRightChild().setParent(n.getParent());
                     }
                 } else {
-                    if (n.getLeftNode() != null) {
-                        x.setRightNode(n.getLeftNode());
-                        n.getLeftNode().setParent(n.getParent());
+                    if (n.getLeftChild() != null) {
+                        x.setRightChild(n.getLeftChild());
+                        n.getLeftChild().setParent(n.getParent());
                     } else {
-                        x.setRightNode(n.getRightNode());
-                        n.getRightNode().setParent(n.getParent());
+                        x.setRightChild(n.getRightChild());
+                        n.getRightChild().setParent(n.getParent());
                     }
                 }
             }
         }
         else{
-            Node min = findMin(n.getRightNode());
+            Node min = findMin(n.getRightChild());
             int val = min.getVal();
             n.setVal(val);
-            if(min.getLeftNode() == null && min.getRightNode() == null) {
-                if (min.getParent().getLeftNode() == min) {
-                    min.getParent().setLeftNode(null);
+            if(min.getLeftChild() == null && min.getRightChild() == null) {
+                if (min.getParent().getLeftChild() == min) {
+                    min.getParent().setLeftChild(null);
                 } else {
-                    min.getParent().setRightNode(null);
+                    min.getParent().setRightChild(null);
                 }
             }
             else{
-                n.setRightNode(min.getRightNode());
-                min.getRightNode().setParent(n);
+                n.setRightChild(min.getRightChild());
+                min.getRightChild().setParent(n);
             }
         }
         /*Node x = n.getParent();
-        if (n.getParent().getLeftNode() == n){
-            if(n.getLeftNode() != null && n.getRightNode() != null) {
-                n.getRightNode().setParent(x);
+        if (n.getParent().getLeftChild() == n){
+            if(n.getLeftChild() != null && n.getRightChild() != null) {
+                n.getRightChild().setParent(x);
 
-                Node y = n.getRightNode();
-                x.setLeftNode(y);
-                n.getLeftNode().setParent(y);
-                y.setLeftNode(n.getLeftNode());
+                Node y = n.getRightChild();
+                x.setLeftChild(y);
+                n.getLeftChild().setParent(y);
+                y.setLeftChild(n.getLeftChild());
             }
-            else if(n.getLeftNode() != null)
+            else if(n.getLeftChild() != null)
             {
-                n.getLeftNode().setParent(x);
-                x.setLeftNode(n.getLeftNode());
+                n.getLeftChild().setParent(x);
+                x.setLeftChild(n.getLeftChild());
 
             }
-            else if(n.getRightNode() != null)
+            else if(n.getRightChild() != null)
             {
-                n.getRightNode().setParent(x);
-                x.setLeftNode(n.getRightNode());
+                n.getRightChild().setParent(x);
+                x.setLeftChild(n.getRightChild());
             }
             else{
-                n.getParent().setLeftNode(null);
+                n.getParent().setLeftChild(null);
             }
         }
-        else if(n.getParent().getRightNode() == n)
+        else if(n.getParent().getRightChild() == n)
         {
-            if(n.getLeftNode() != null && n.getRightNode() != null) {
-                n.getLeftNode().setParent(x);
-                Node y = n.getLeftNode();
-                x.setRightNode(y);
-                n.getRightNode().setParent(y);
-                y.setRightNode(n.getRightNode());
+            if(n.getLeftChild() != null && n.getRightChild() != null) {
+                n.getLeftChild().setParent(x);
+                Node y = n.getLeftChild();
+                x.setRightChild(y);
+                n.getRightChild().setParent(y);
+                y.setRightChild(n.getRightChild());
             }
-            else if(n.getLeftNode() != null)
+            else if(n.getLeftChild() != null)
             {
-                n.getLeftNode().setParent(x);
-                x.setRightNode(n.getLeftNode());
+                n.getLeftChild().setParent(x);
+                x.setRightChild(n.getLeftChild());
 
             }
-            else if(n.getRightNode() != null)
+            else if(n.getRightChild() != null)
             {
-                n.getRightNode().setParent(x);
-                x.setRightNode(n.getRightNode());
+                n.getRightChild().setParent(x);
+                x.setRightChild(n.getRightChild());
             }
             else {
-                n.getParent().setRightNode(null);
+                n.getParent().setRightChild(null);
             }
         }*/
     }
@@ -260,8 +259,8 @@ class Tree
         {
             return null;
         }
-        dNode(val, n.getLeftNode(), t);
-        dNode(val, n.getRightNode(), t);
+        dNode(val, n.getLeftChild(), t);
+        dNode(val, n.getRightChild(), t);
         if(n.getVal() == val)
         {
             t.deleteNode(n);
@@ -279,20 +278,20 @@ class Tree
             Stage scene = stk.peek();
             Node node = scene.getNode();
 
-            if(node.getLeftNode() != null && scene.getLeftChecked() == false) {
-                Stage s = new Stage (stk.peek().getNode().getLeftNode());
+            if(node.getLeftChild() != null && scene.getLeftChecked() == false) {
+                Stage s = new Stage (stk.peek().getNode().getLeftChild());
                 stk.push(s);
                 continue;
             }
             stk.peek().setLeftChecked();
             if(scene.getRightChecked() == false)
             {
-                if(stk.peek().getNode().getRightNode() == null)
+                if(stk.peek().getNode().getRightChild() == null)
                 {
                     stk.peek().setrightChecked();
                 }
                 else {
-                    Stage s = new Stage(node.getRightNode());
+                    Stage s = new Stage(node.getRightChild());
                     stk.push(s);
                     continue;
                 }
@@ -306,9 +305,7 @@ class Tree
                         stk.pop();
                         break;
                     }
-                    resetHei();
-                    resetBal();
-                    checkBalance();
+                    reBalance();
                 }
                 stk.pop();
                 if(stk.empty() == true)
@@ -340,8 +337,8 @@ class Tree
     public Node findMin(Node n)
     {
         Node x = n;
-        while(x.getLeftNode() != null) {
-            x = x.getLeftNode();
+        while(x.getLeftChild() != null) {
+            x = x.getLeftChild();
         }
         return x;
     }
@@ -359,8 +356,8 @@ class Tree
         {
             return -1;
         }
-        n.leftHeight = setHeight(n.getLeftNode());
-        n.rightHeight = setHeight(n.getRightNode());
+        n.leftHeight = setHeight(n.getLeftChild());
+        n.rightHeight = setHeight(n.getRightChild());
         n.height =  Math.max(n.leftHeight, n.rightHeight) + 1;
         return n.height;*/
         Stage first = new Stage(curNode);
@@ -371,37 +368,37 @@ class Tree
             Stage scene = stk.peek();
             Node node = scene.getNode();
 
-            if(node.getLeftNode() != null && scene.getLeftChecked() == false) {
-                Stage s = new Stage (stk.peek().getNode().getLeftNode());
+            if(node.getLeftChild() != null && scene.getLeftChecked() == false) {
+                Stage s = new Stage (stk.peek().getNode().getLeftChild());
                 stk.push(s);
                 continue;
             }
-            if(stk.peek().getNode().getLeftNode() == null)
+            if(stk.peek().getNode().getLeftChild() == null)
             {
                 scene.setLeftChecked();
                 node.setLeftHeight(-1);
             }
             if(stk.peek().getRightChecked() == false)
             {
-                if(stk.peek().getNode().getRightNode() == null)
+                if(stk.peek().getNode().getRightChild() == null)
                 {
                     scene.setrightChecked();
                     node.setRightHeight(-1);
 
                 }
                 else {
-                    Stage s = new Stage(node.getRightNode());
+                    Stage s = new Stage(node.getRightChild());
                     stk.push(s);
                     continue;
                 }
             }
             while(scene.getLeftChecked() == true && scene.getRightChecked() == true) {
-                if (node.getLeftNode() != null) {
-                    node.setLeftHeight(Math.max(node.getLeftNode().getLeftHeight(), node.getLeftNode().getRightHeight()) + 1);
+                if (node.getLeftChild() != null) {
+                    node.setLeftHeight(Math.max(node.getLeftChild().getLeftHeight(), node.getLeftChild().getRightHeight()) + 1);
                 }
-                if (stk.peek().getNode().getRightNode() != null)
+                if (stk.peek().getNode().getRightChild() != null)
                 {
-                    node.setRightHeight(Math.max(node.getRightNode().getLeftHeight(), node.getRightNode().getRightHeight()) + 1);
+                    node.setRightHeight(Math.max(node.getRightChild().getLeftHeight(), node.getRightChild().getRightHeight()) + 1);
                 }
 
 
@@ -434,8 +431,8 @@ class Tree
     {
         /*if (n != null) {
             n.balance = n.leftHeight - n.rightHeight;
-            getBalance(n.getLeftNode());
-            getBalance(n.getRightNode());
+            getBalance(n.getLeftChild());
+            getBalance(n.getRightChild());
         }*/
         Stage first = new Stage(curNode);
         Stack<Stage> stk = new Stack<Stage>();
@@ -444,24 +441,25 @@ class Tree
         {
             Stage scene = stk.peek();
             Node node = scene.getNode();
-            if(node.getLeftNode() != null && scene.getLeftChecked() == false) {
-                Stage s = new Stage (node.getLeftNode());
+            if(node.getLeftChild() != null && scene.getLeftChecked() == false) {
+                Stage s = new Stage (node.getLeftChild());
                 stk.push(s);
                 continue;
             }
             stk.peek().setLeftChecked();
             if(stk.peek().getRightChecked() == false)
             {
-                if(stk.peek().getNode().getRightNode() == null)
+                if(stk.peek().getNode().getRightChild() == null)
                 {
                     stk.peek().setrightChecked();
                 }
                 else {
-                    Stage s = new Stage(stk.peek().getNode().getRightNode());
+                    Stage s = new Stage(stk.peek().getNode().getRightChild());
                     stk.push(s);
                     continue;
                 }
             }
+
             while(stk.peek().getLeftChecked() == true && stk.peek().getRightChecked() == true)
             {
                 node.setBalance(node.getLeftHeight() - node.getRightHeight());
@@ -489,98 +487,138 @@ class Tree
     public void leftRotation(Node n)
     {
         Node parent = n.getParent();
-        Node rightNode = n.getRightNode();
-        Node leftNode = rightNode.getLeftNode();
+        Node rightNode = n.getRightChild();
+        Node leftNode = rightNode.getLeftChild();
 
         if(parent == null) {
 
-            rightNode.setLeftNode(n);
+            rightNode.setLeftChild(n);
             rightNode.setParent(null);
 
             n.setParent(rightNode);
             if(leftNode != null) {
-                n.setRightNode(leftNode);
+                n.setRightChild(leftNode);
             }
             else {
-                n.setRightNode(null);
+                n.setRightChild(null);
             }
 
 
             setNode(rightNode);
         }
         else {
-            rightNode.setLeftNode(n);
+            rightNode.setLeftChild(n);
             rightNode.setParent(parent);
             n.setParent(rightNode);
             if(rightNode.getParent().getVal() > rightNode.getVal())
             {
-                rightNode.getParent().setLeftNode(rightNode);
+                rightNode.getParent().setLeftChild(rightNode);
             }
             else{
-                rightNode.getParent().setRightNode(rightNode);
+                rightNode.getParent().setRightChild(rightNode);
             }
             if(leftNode != null)
             {
-                n.setRightNode(leftNode);
+                n.setRightChild(leftNode);
             }
             else{
-                n.setRightNode(null);
+                n.setRightChild(null);
             }
 
         }
     }
     public void rightRotation(Node n)
     {
-        Node parent = n.getParent();
-        Node leftNode = n.getLeftNode();
-        Node leftLeftNode = leftNode.getLeftNode();
+        /*Node parent = n.getParent();
+        Node leftChild = n.getLeftChild();
+        Node leftLeftNode = leftChild.getLeftChild();
 
         if(parent == null) {
-            leftNode.setRightNode(n);
-            n.setParent(leftNode);
-            n.setLeftNode(null);
-            leftNode.setParent(null);
-            leftNode.setLeftNode(leftLeftNode);
-            leftLeftNode.setParent(leftNode);
-            setNode(leftNode);
+            leftChild.setRightChild(n);
+            n.setParent(leftChild);
+            n.setLeftChild(null);
+            leftChild.setParent(null);
+            leftChild.setLeftChild(leftLeftNode);
+            leftLeftNode.setParent(leftChild);
+            setNode(leftChild);
 
         }
         else {
-            leftNode.setRightNode(n);
-            leftNode.setParent(parent);
-            n.setParent(leftNode);
-            if(leftNode.getParent().getVal() < leftNode.getVal())
+            leftChild.setRightChild(n);
+            leftChild.setParent(parent);
+            n.setParent(leftChild);
+            if(leftChild.getParent().getVal() < leftChild.getVal())
             {
-                leftNode.getParent().setRightNode(leftNode);
+                leftChild.getParent().setRightChild(leftChild);
             }
             else{
-                leftNode.getParent().setLeftNode(leftNode);
+                leftChild.getParent().setLeftChild(leftChild);
             }
-            n.setLeftNode(null);
+            n.setLeftChild(null);
+
+        }*/
+        Node parent = n.getParent();
+        Node leftChild = n.getLeftChild();
+        Node rightChild = leftChild.getRightChild();
+
+        if(parent == null) {
+
+            leftChild.setRightChild(n);
+            leftChild.setParent(null);
+
+            n.setParent(leftChild);
+            if(rightChild != null) {
+                n.setLeftChild(rightChild);
+            }
+            else {
+                n.setLeftChild(null);
+            }
+
+
+            setNode(leftChild);
+        }
+        else {
+            leftChild.setRightChild(n);
+            leftChild.setParent(parent);
+            n.setParent(leftChild);
+            if(leftChild.getParent().getVal() > leftChild.getVal())
+            {
+                leftChild.getParent().setRightChild(leftChild);
+            }
+            else{
+                leftChild.getParent().setLeftChild(leftChild);
+            }
+            if(rightChild != null)
+            {
+                n.setLeftChild(rightChild);
+            }
+            else{
+                n.setLeftChild(null);
+            }
 
         }
     }
 
-    public void leftrightRotation(Node n)
+    public void leftRightRotation(Node n)
     {
-        Node leftNode = n.getLeftNode();
-        Node leftrightNode = leftNode.getRightNode();
-        n.setLeftNode(leftrightNode);
-        leftrightNode.setLeftNode(leftNode);
+        Node leftNode = n.getLeftChild();
+        Node leftrightNode = leftNode.getRightChild();
+        n.setLeftChild(leftrightNode);
+        leftrightNode.setLeftChild(leftNode);
         leftrightNode.setParent(n);
         leftNode.setParent(leftrightNode);
-        leftNode.setRightNode(null);
+        leftNode.setRightChild(null);
         rightRotation(n);
     }
-    public void rightleftRotation(Node n)
+    public void rightLeftRotation(Node n)
     {
-        Node rightNode = n.getRightNode();
-        Node rightleftNode = rightNode.getLeftNode();
-        n.setRightNode(rightleftNode);
-        rightleftNode.setRightNode(rightNode);
+        Node rightNode = n.getRightChild();
+        Node rightleftNode = rightNode.getLeftChild();
+        n.setRightChild(rightleftNode);
+        rightleftNode.setRightChild(rightNode);
         rightleftNode.setParent(n);
         rightNode.setParent(rightleftNode);
-        rightNode.setLeftNode(null);
+        rightNode.setLeftChild(null);
         leftRotation(n);
     }
 
@@ -590,20 +628,20 @@ class Tree
         {
             return null;
         }
-        checkBalance(n.getLeftNode(), t);
-        checkBalance(n.getRightNode(), t);
+        checkBalance(n.getLeftChild(), t);
+        checkBalance(n.getRightChild(), t);
 
         if(n.balance > 1 || n.balance < -1)
         {
             int checked = n.balance;
-            if (checked < -1 && (n.getRightNode().getRightNode() != null)) {
+            if (checked < -1 && (n.getRightChild().getRightChild() != null)) {
                 t.leftRotation(n, t);
-            } else if (checked < -1 && (n.getRightNode().getLeftNode() != null)) {
-                t.rightleftRotation(n, t);
-            } else if (checked > 1 && (n.getLeftNode().getLeftNode() != null)) {
+            } else if (checked < -1 && (n.getRightChild().getLeftChild() != null)) {
+                t.rightLeftRotation(n, t);
+            } else if (checked > 1 && (n.getLeftChild().getLeftChild() != null)) {
                 t.rightRotation(n, t);
             } else {
-                t.leftrightRotation(n, t);
+                t.leftRightRotation(n, t);
             }
         }
         return null;*/
@@ -616,8 +654,8 @@ class Tree
             Stage scene = stk.peek();
             Node node = scene.getNode();
 
-            if(node.getLeftNode() != null && scene.getLeftChecked() == false) {
-                Stage s = new Stage (node.getLeftNode());
+            if(node.getLeftChild() != null && scene.getLeftChecked() == false) {
+                Stage s = new Stage (node.getLeftChild());
                 stk.push(s);
                 continue;
 
@@ -625,12 +663,12 @@ class Tree
             scene.setLeftChecked();
             if(scene.getRightChecked() == false)
             {
-                if(node.getRightNode() == null)
+                if(node.getRightChild() == null)
                 {
                     scene.setrightChecked();
                 }
                 else {
-                    Stage s = new Stage(node.getRightNode());
+                    Stage s = new Stage(node.getRightChild());
                     stk.push(s);
                     continue;
                 }
@@ -640,14 +678,14 @@ class Tree
                 if(node.getBalance() > 1 || node.getBalance() < -1)
                 {
                     int checked = node.getBalance();
-                    if (checked < -1 && (node.getRightNode().getRightNode() != null)) {
+                    if (checked < -1 && (node.getRightChild().getRightChild() != null)) {
                         leftRotation(node);
-                    } else if (checked < -1 && (node.getRightNode().getLeftNode() != null)) {
-                        rightleftRotation(node);
-                    } else if (checked > 1 && (node.getLeftNode().getLeftNode() != null)) {
+                    } else if (checked < -1 && (node.getRightChild().getLeftChild() != null)) {
+                        rightLeftRotation(node);
+                    } else if (checked > 1 && (node.getLeftChild().getLeftChild() != null)) {
                         rightRotation(node);
                     } else {
-                        leftrightRotation(node);
+                        leftRightRotation(node);
                     }
                 }
                 resetHei();
@@ -675,23 +713,23 @@ class Tree
         return null;
     }
 
-    public static void printTree(Node n)
+    public void printTree()
     {
 
         /*if (n != null) {
             System.out.print(n.getVal() + " ");
-            printTree(n.getLeftNode());
-            printTree(n.getRightNode());
+            printTree(n.getLeftChild());
+            printTree(n.getRightChild());
         }*/
-        Stage first = new Stage(n);
+        Stage first = new Stage(curNode);
         Stack<Stage> stk = new Stack<Stage>();
         stk.push(first);
         while(stk.empty() == false)
         {
             Stage scene = stk.peek();
             Node node = scene.getNode();
-            if(node.getLeftNode() != null && scene.getLeftChecked() == false) {
-                Stage s = new Stage (node.getLeftNode());
+            if(node.getLeftChild() != null && scene.getLeftChecked() == false) {
+                Stage s = new Stage (node.getLeftChild());
                 stk.push(s);
                 continue;
                 /*scene = stk.peek();
@@ -700,12 +738,12 @@ class Tree
             stk.peek().setLeftChecked();
             if(stk.peek().getRightChecked() == false)
             {
-                if(stk.peek().getNode().getRightNode() == null)
+                if(stk.peek().getNode().getRightChild() == null)
                 {
                     stk.peek().setrightChecked();
                 }
                 else {
-                    Stage s = new Stage(stk.peek().getNode().getRightNode());
+                    Stage s = new Stage(stk.peek().getNode().getRightChild());
                     stk.push(s);
                     continue;
                 }
@@ -772,8 +810,8 @@ class Stage
 class Node
 {
     private Node parent;
-    private Node leftNode;
-    private Node rightNode;
+    private Node leftChild;
+    private Node rightChild;
     private int val;
     private int leftHeight;
     private int rightHeight;
@@ -790,13 +828,13 @@ class Node
     {
         return this.parent;
     }
-    public void setLeftNode(Node n)
+    public void setLeftChild(Node n)
     {
-        this.leftNode = n;
+        this.leftChild = n;
     }
-    public void setRightNode(Node n)
+    public void setRightChild(Node n)
     {
-        this.rightNode = n;
+        this.rightChild = n;
     }
     public int getVal()
     {
@@ -830,13 +868,13 @@ class Node
     {
         this.val = v;
     }
-    public Node getLeftNode()
+    public Node getLeftChild()
     {
-        return this.leftNode;
+        return this.leftChild;
     }
-    public Node getRightNode()
+    public Node getRightChild()
     {
-        return this.rightNode;
+        return this.rightChild;
     }
 
 
