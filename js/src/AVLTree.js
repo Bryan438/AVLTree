@@ -7,8 +7,10 @@ class Node{
     rightHeight;
     balance = 0;
     value;
-    constructor(value){
+    content;
+    constructor(value, content){
         this.value = value;
+        this.content = content;
     }
     setParent(node){
         this.parentNode = node;
@@ -31,6 +33,9 @@ class Node{
     setVal(v){
         this.value = v;
     }
+    setContent(c){
+        this.content = c;
+    }
     getParent(){
         return this.parentNode;
     }
@@ -51,6 +56,9 @@ class Node{
     }
     getValue(){
         return this.value;
+    }
+    getContent(){
+        return this.content;
     }
 }
 
@@ -83,47 +91,46 @@ class Tree{
     curNode = null;
     constructor(){
     }
+
     setNode(n){
         this.curNode = n;
     }
+
     getNode(){
         return this.curNode;
     }
-    insertNode(val){
-        var n = new Node(val);
+
+    insertNode(val, content){
+        var n = new Node(val, content);
         var no = this.curNode;
         while(true){
             if(no === null){
                 this.curNode = n;
                 break;
-            }
+            } 
             else if(n.getValue() <= no.getValue()){
                 if(no.getLeftNode() == null){
                     no.setLeftChild(n);
                     n.setParent(no);
                     break;
-                }
-                else{
+                } else {
                     no = no.getLeftNode();
                 }
-            }
-            else{
+            } else {
                 if(no.getRightNode() === null){
                     no.setRightChild(n);
                     n.setParent(no);
                     break;
-                }
-                else{
+                } else {
                     no = no.getRightNode();
                 }
-            }
-            
+            }   
         }
         this.setHeight();
         this.calBalance();
         this.checkBalance();
-
     }
+
     calBalance(){
         var first = new Stage(this.curNode);
         var stk = [];
@@ -131,19 +138,16 @@ class Tree{
         while(stk.length !== 0){
             var scene = stk[stk.length - 1];
             var node = scene.getNode();
-            if(node.getLeftNode() !== null && scene.getLeftChecked() === false){
+            if(node.getLeftNode() !== null && scene.getLeftChecked() === false) {
                 const s = new Stage(stk[stk.length - 1].getNode().getLeftNode());
                 stk.push(s);
                 continue;
             }
             stk[stk.length - 1].setLeftChecked();
-            if(stk[stk.length - 1].getRightChecked() === false)
-            {
-                if(stk[stk.length - 1].getNode().getRightNode() === null)
-                {
+            if(stk[stk.length - 1].getRightChecked() === false) {
+                if(stk[stk.length - 1].getNode().getRightNode() === null) {
                     scene.setRightChecked();
-                }
-                else{
+                } else {
                     const s = new Stage(node.getRightNode());
                     stk.push(s);
                     continue;
@@ -166,46 +170,43 @@ class Tree{
             }
         }
     }
+    
     setHeight(){
         var first = new Stage(this.curNode);
         var stk = [];
         stk.push(first);
+
         while(stk.length !== 0){
             var scene = stk[stk.length - 1];
             var node = scene.getNode();
-            if(node.getLeftNode() !== null && scene.getLeftChecked() === false){
+            if(node.getLeftNode() !== null && scene.getLeftChecked() === false) {
                 const s = new Stage(stk[stk.length - 1].getNode().getLeftNode());
                 stk.push(s);
                 continue;
             }
-            if(stk[stk.length - 1].getNode().getLeftNode() === null)
-            {
+            if(stk[stk.length - 1].getNode().getLeftNode() === null) {
                 scene.setLeftChecked();
                 node.setLeftHeight(-1);
             }
-            if(stk[stk.length - 1].getRightChecked() === false)
-            {
-                if(stk[stk.length - 1].getNode().getRightNode() === null)
-                {
+            if(stk[stk.length - 1].getRightChecked() === false) {
+                if(stk[stk.length - 1].getNode().getRightNode() === null) {
                     scene.setRightChecked();
                     node.setRightHeight(-1);
-                }
-                else{
+                } else {
                     const s = new Stage(node.getRightNode());
                     stk.push(s);
                     continue;
                 }
             }
-            while(scene.getLeftChecked() === true && scene.getRightChecked() === true){
+            while(scene.getLeftChecked() === true && scene.getRightChecked() === true) {
                 if(node.getLeftNode() != null){
                     node.setLeftHeight(Math.max(node.getLeftNode().getLeftHeight(), node.getLeftNode().getRightHeight()) + 1);
                 }
-                if(stk[stk.length - 1].getNode().getRightNode() !== null)
-                {
+                if(stk[stk.length - 1].getNode().getRightNode() !== null) {
                     node.setRightHeight(Math.max(node.getRightNode().getLeftHeight(), node.getRightNode().getRightHeight()) + 1);
                 }
                 stk.pop();
-                if(stk.length === 0){
+                if(stk.length === 0) {
                     break;
                 }
                 scene = stk[stk.length - 1];
@@ -220,172 +221,164 @@ class Tree{
         }
     }
 
+    nodeSetLeftChild(node, n){
+        node.setLeftChild(n);
+        n.setParent(node);
+    }
+
+    nodeSetRightChild(node, n){
+        node.setRightChild(n);
+        n.setParent(node);
+    }
+
     leftRotation(n){
         var parent = n.getParent();
         var rightNode = n.getRightNode();
         var leftNode = rightNode.getLeftNode();
+
         if(parent === null){
-            rightNode.setLeftChild(n);
+            this.nodeSetLeftChild(rightNode,n);
             rightNode.setParent(null);
-            n.setParent(rightNode);
             if(leftNode != null){
-                n.setRightChild(leftNode);
-                leftNode.setParent(n);
-            }
-            else{
+                this.nodeSetRightChild(leftNode,n);
+            } else {
                 n.setRightChild(null);
             }
             this.setNode(rightNode);
-        }
-        else{
+        } else {
             rightNode.setLeftChild(n);
             rightNode.setParent(parent);
             n.setParent(rightNode);
-            if(rightNode.getParent().getValue() > rightNode.getValue())
-            {
+            if(rightNode.getParent().getValue() > rightNode.getValue()) {
                 rightNode.getParent().setLeftChild(rightNode);
-            }
-            else{
+            } else{
                 rightNode.getParent().setRightChild(rightNode);
             }
             if(leftNode != null){
                 n.setRightChild(leftNode);
                 leftNode.setParent(n);
-            }
-            else{
+            } else {
                 n.setRightChild(null);
             }
         }
 
     }
-    rightRotation(n)
-    {
+
+    rightRotation(n){
         var parent = n.getParent();
         var leftChild = n.getLeftNode();
         var rightChild = leftChild.getRightNode();
+
         if(parent === null){
-            leftChild.setRightChild(n);
+            this.nodeSetRightChild(leftChild,n);
             leftChild.setParent(null);
-            n.setParent(leftChild);
             if(rightChild !== null){
-                n.setLeftChild(rightChild);
-                rightChild.setParent(n);
-            }
-            else{
+                this.nodeSetLeftChild(rightChild,n);
+            } else {
                 n.setLeftChild(null);
             }
             this.setNode(leftChild);
-        }
-        else{
+        } else {
             leftChild.setRightChild(n);
             leftChild.setParent(parent);
             n.setParent(leftChild);
             if(leftChild.getParent().getValue() > leftChild.getValue())
             {
                 leftChild.getParent().setRightChild(leftChild);
-            }
-            else{
+            } else {
                 leftChild.getParent().setLeftChild(leftChild);
             }
             if(rightChild !== null){
                 n.setLeftChild(rightChild);
                 rightChild.setParent(n);
-            }
-            else{
+            } else {
                 n.setLeftChild(null);
             }
         }
     }
-    leftRightRotation(n)
-    {
+
+    leftRightRotation(n) {
         var leftNode = n.getLeftNode();
         var leftRightNode = leftNode.getRightNode();
         var leftRightLeftNode = leftRightNode.getLeftNode();
+
         n.setLeftChild(leftRightNode);
         leftRightNode.setLeftChild(leftNode);
         leftRightNode.setParent(n);
         leftNode.setParent(leftRightNode);
         if(leftRightLeftNode === null){
             leftNode.setRightChild(null);
-        }
-        else{
+        } else {
             leftNode.setRightChild(leftRightLeftNode);
             leftRightLeftNode.setParent(leftNode);
         }
         this.rightRotation(n);
     }
-    rightLeftRotation(n)
-    {
+    rightLeftRotation(n) {
         var rightNode = n.getRightNode();
         var rightLeftNode = rightNode.getLeftNode();
         var rightLeftRightNode = rightLeftNode.getRightNode();
+
         n.setRightChild(rightLeftNode);
         rightLeftNode.setRightChild(rightNode);
         rightLeftNode.setParent(n);
         rightNode.setParent(rightLeftNode);
         if(rightLeftRightNode === null){
             rightNode.setLeftChild(null);
-        }
-        else{
+        } else {
             rightNode.setLeftChild(rightLeftRightNode);
             rightLeftRightNode.setParent(rightNode);
         }
         this.leftRotation(n);
     }
-    checkBalance()
-    {
+    checkBalance() {
         var first = new Stage(this.curNode);
         var stk = [];
         stk.push(first);
         while(stk.length !== 0){
             var scene = stk[stk.length - 1];
             var node = scene.getNode();
+
             if(node.getLeftNode() !== null && scene.getLeftChecked() === false){
                 const s = new Stage(stk[stk.length - 1].getNode().getLeftNode());
                 stk.push(s);
                 continue;
             }
             scene.setLeftChecked();     
-            if(stk[stk.length - 1].getRightChecked() === false)
-            {
-                if(stk[stk.length - 1].getNode().getRightNode() === null)
-                {
+            if(stk[stk.length - 1].getRightChecked() === false) {
+                if(stk[stk.length - 1].getNode().getRightNode() === null) {
                     scene.setRightChecked();
-                }
-                else{
+                } else {
                     const s = new Stage(node.getRightNode());
                     stk.push(s);
                     continue;
                 }
             }
             while(scene.getLeftChecked() === true && scene.getRightChecked() === true){
-                if(node.getBalance() > 1 || node.getBalance() < -1)
-                {
+                if(node.getBalance() > 1 || node.getBalance() < -1) {
                     var checked = node.getBalance();
                     if(checked < -1 && node.getLeftNode() === null){
                         this.leftRotation(node);
                     }
-                    else if(checked > 1 && node.getLeftNode().getBalance() === -1)
-                    {
+                    else if(checked > 1 && node.getLeftNode().getBalance() === -1){
                         this.leftRightRotation(node);
                     }
                     else if(checked > 1 && node.getRightNode() === null){
                         this.rightRotation(node);
                     }
-                    else if(checked < -1 && node.getRightNode().getBalance() === 1)
-                    {
+                    else if(checked < -1 && node.getRightNode().getBalance() === 1){
                         this.rightLeftRotation(node);
                     }
                     else if(checked < -1){
                         this.leftRotation(node);
-                    }
-                    else{
+                    } else {
                         this.rightRotation(node);
                     }
                 }
                 this.setHeight();
                 this.calBalance();
                 stk.pop();
+
                 if(stk.length === 0){
                     break;
                 }
@@ -401,64 +394,53 @@ class Tree{
         }
     }
     remove(n){
-        if(n.getLeftNode() === null && n.getRightNode() === null)
-        {
+        if(n.getLeftNode() === null && n.getRightNode() === null) {
             if(n.getParent() === null){
                 this.curNode = null;
             }
             else if(n.getParent().getLeftNode() === n){
                 n.getParent().setLeftChild(null);
-            }
-            else{
+            }else{
                 n.getParent().setRightChild(null);
             }
         }
         else if(((n.getLeftNode() != null || n.getRightNode() != null) === true) && (n.getRightNode() != null && n.getLeftNode() != null) === false){
+
             var parent = n.getParent();
             var leftChild = n.getLeftNode();
             var rightChild = n.getRightNode();
+
             if(parent === null){
                 if(leftChild != null){
                     this.curNode = leftChild;
                     leftChild.setParent(null);
-                }
-                else{
+                } else {
                     this.curNode = rightChild;
                     rightChild.setParent(null);
                 }
-            }
-            else{
+            } else {
                 if(parent.getLeftNode() === n){
                     if(leftChild != null){
-                        parent.setLeftChild(leftChild);
-                        leftChild.setParent(parent);
+                        this.nodeSetLeftChild(parent, leftChild);
+                    } else {
+                        this.nodeSetLeftChild(parent, rightChild);
                     }
-                    else{
-                        parent.setLeftChild(rightChild);
-                        rightChild.setParent(parent);
-                    }
-                }
-                else{
+                } else {
                     if(leftChild != null){
-                        parent.setRightChild(leftChild);
-                        leftChild.setParent(parent);
-                    }
-                    else{
-                        parent.setRightChild(rightChild);
-                        rightChild.setParent(parent);
+                        this.nodeSetRightChild(parent, leftChild);
+                    } else {
+                        this.nodeSetRightChild(parent, rightChild);
                     }
                 }
             }      
-        }
-        else{
+        } else {
             var leftNode = n.getLeftNode();
             if(leftNode.getRightNode() === null){
                 var temp = n.getValue();
                 n.setVal(leftNode.getValue());
                 leftNode.setVal(temp);
                 this.remove(leftNode);
-            }
-            else{
+            } else {
                 var leftLargestNode = leftNode;
                 while(leftLargestNode.getRightNode() != null){
                     leftLargestNode = leftLargestNode.getRightNode();
@@ -486,13 +468,10 @@ class Tree{
                 continue;
             }
             stk[stk.length - 1].setLeftChecked();
-            if(stk[stk.length - 1].getRightChecked() === false)
-            {
-                if(stk[stk.length - 1].getNode().getRightNode() === null)
-                {
+            if(stk[stk.length - 1].getRightChecked() === false) {
+                if(stk[stk.length - 1].getNode().getRightNode() === null) {
                     scene.setRightChecked();
-                }
-                else{
+                } else {
                     const s = new Stage(node.getRightNode());
                     stk.push(s);
                     continue;
@@ -545,20 +524,17 @@ class Tree{
                 continue;
             }
             scene.setLeftChecked();
-            if(stk[stk.length - 1].getRightChecked() === false)
-            {
-                if(stk[stk.length - 1].getNode().getRightNode() === null)
-                {
+            if(stk[stk.length - 1].getRightChecked() === false) {
+                if(stk[stk.length - 1].getNode().getRightNode() === null) {
                     scene.setRightChecked();
-                }
-                else{
+                } else {
                     const s = new Stage(node.getRightNode());
                     stk.push(s);
                     continue;
                 }
             }
             while(scene.getLeftChecked() === true && scene.getRightChecked() === true){
-                console.log(node.getValue() + " ");
+                console.log(node.getValue() + " " + node.getContent());
                 stk.pop();
                 if(stk.length === 0){
                     break;
@@ -576,9 +552,8 @@ class Tree{
     }
 }
 const tree = new Tree()
-tree.insertNode(20);
+tree.insertNode(20, "hi");
 
-tree.deleteNode(20);
 
 
 tree.printTree();

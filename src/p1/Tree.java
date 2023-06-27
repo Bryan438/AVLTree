@@ -15,7 +15,8 @@ public class Tree {
         return curNode;
     }
 
-    public void insertNode(Node n){
+    public void insertNode(int val){
+        Node n = new Node(val);
         Node no = curNode;
         while(true) {
             if (n.getVal() <= no.getVal()) {
@@ -506,11 +507,17 @@ public class Tree {
     {
         Node leftNode = n.getLeftChild();
         Node leftrightNode = leftNode.getRightChild();
+        Node leftrightleftNode = leftrightNode.getLeftChild();
         n.setLeftChild(leftrightNode);
         leftrightNode.setLeftChild(leftNode);
         leftrightNode.setParent(n);
         leftNode.setParent(leftrightNode);
-        leftNode.setRightChild(null);
+        if(leftrightleftNode == null) {
+            leftNode.setRightChild(null);
+        }
+        else{
+            leftNode.setRightChild(leftrightleftNode);
+        }
         rightRotation(n);
     }
     public void rightLeftRotation(Node n)
@@ -585,10 +592,10 @@ public class Tree {
                         leftRotation(node);
                     } else if (checked < -1 && (node.getRightChild().getLeftChild() != null)) {
                         rightLeftRotation(node);
-                    } else if (checked > 1 && (node.getLeftChild().getLeftChild() != null)) {
-                        rightRotation(node);
-                    } else {
+                    } else if (checked > 1 && (node.getLeftChild().getBalance() == -1)) {
                         leftRightRotation(node);
+                    } else {
+                        rightRotation(node);
                     }
                 }
                 resetHei();

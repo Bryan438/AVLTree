@@ -27,7 +27,7 @@ public class Main {
                 if (tree.getNode() == null) {
                     tree.setNode(n);
                 } else {
-                    tree.insertNode(n);
+                    tree.insertNode(val);
                 }
             }
 
