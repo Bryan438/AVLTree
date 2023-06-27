@@ -107,8 +107,7 @@ class Tree{
             if(no === null){
                 this.curNode = n;
                 break;
-            } 
-            else if(n.getValue() <= no.getValue()){
+            } else if(n.getValue() <= no.getValue()){
                 if(no.getLeftNode() == null){
                     no.setLeftChild(n);
                     n.setParent(no);
@@ -163,8 +162,7 @@ class Tree{
                 node = scene.getNode();
                 if(stk[stk.length - 1].getLeftChecked() == false){
                     scene.setLeftChecked();
-                }
-                else if(stk[stk.length - 1].getRightChecked() == false){
+                } else if(stk[stk.length - 1].getRightChecked() == false){
                     scene.setRightChecked();
                 }
             }
@@ -213,8 +211,7 @@ class Tree{
                 node = scene.getNode();
                 if(stk[stk.length - 1].getLeftChecked() == false){
                     scene.setLeftChecked();
-                }
-                else if(stk[stk.length - 1].getRightChecked() == false){
+                } else if(stk[stk.length - 1].getRightChecked() == false){
                     scene.setRightChecked();
                 }
             }
@@ -359,17 +356,13 @@ class Tree{
                     var checked = node.getBalance();
                     if(checked < -1 && node.getLeftNode() === null){
                         this.leftRotation(node);
-                    }
-                    else if(checked > 1 && node.getLeftNode().getBalance() === -1){
+                    } else if(checked > 1 && node.getLeftNode().getBalance() === -1){
                         this.leftRightRotation(node);
-                    }
-                    else if(checked > 1 && node.getRightNode() === null){
+                    } else if(checked > 1 && node.getRightNode() === null){
                         this.rightRotation(node);
-                    }
-                    else if(checked < -1 && node.getRightNode().getBalance() === 1){
+                    } else if(checked < -1 && node.getRightNode().getBalance() === 1){
                         this.rightLeftRotation(node);
-                    }
-                    else if(checked < -1){
+                    } else if(checked < -1){
                         this.leftRotation(node);
                     } else {
                         this.rightRotation(node);
@@ -386,8 +379,7 @@ class Tree{
                 node = scene.getNode();
                 if(stk[stk.length - 1].getLeftChecked() == false){
                     scene.setLeftChecked();
-                }
-                else if(stk[stk.length - 1].getRightChecked() == false){
+                } else if(stk[stk.length - 1].getRightChecked() == false){
                     scene.setRightChecked();
                 }
             }
@@ -397,14 +389,12 @@ class Tree{
         if(n.getLeftNode() === null && n.getRightNode() === null) {
             if(n.getParent() === null){
                 this.curNode = null;
-            }
-            else if(n.getParent().getLeftNode() === n){
+            } else if(n.getParent().getLeftNode() === n){
                 n.getParent().setLeftChild(null);
-            }else{
+            } else{
                 n.getParent().setRightChild(null);
             }
-        }
-        else if(((n.getLeftNode() != null || n.getRightNode() != null) === true) && (n.getRightNode() != null && n.getLeftNode() != null) === false){
+        } else if(((n.getLeftNode() != null || n.getRightNode() != null) === true) && (n.getRightNode() != null && n.getLeftNode() != null) === false){
 
             var parent = n.getParent();
             var leftChild = n.getLeftNode();
@@ -496,8 +486,7 @@ class Tree{
                 node = scene.getNode();
                 if(stk[stk.length - 1].getLeftChecked() == false){
                     scene.setLeftChecked();
-                }
-                else if(stk[stk.length - 1].getRightChecked() == false){
+                } else if(stk[stk.length - 1].getRightChecked() == false){
                     scene.setRightChecked();
                 }
             }
@@ -543,8 +532,7 @@ class Tree{
                 node = scene.getNode();
                 if(stk[stk.length - 1].getLeftChecked() == false){
                     scene.setLeftChecked();
-                }
-                else if(stk[stk.length - 1].getRightChecked() == false){
+                } else if(stk[stk.length - 1].getRightChecked() == false){
                     scene.setRightChecked();
                 }
             }
